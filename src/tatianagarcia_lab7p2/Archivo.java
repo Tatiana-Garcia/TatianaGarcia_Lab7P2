@@ -55,6 +55,6 @@ public class Archivo implements Serializable{
 
     @Override
     public String toString() {
-        return "Archivo{" + "nombre=" + nombre + ", link=" + link + ", extension=" + extension + ", tama\u00f1o=" + tamaño + '}';
+        return nombre;
     }
 }

@@ -34,6 +34,14 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        menu = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        table = new javax.swing.JDialog();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -43,6 +51,36 @@ public class Main extends javax.swing.JFrame {
         jProgressBar3 = new javax.swing.JProgressBar();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+
+        jMenuItem1.setText("Destacar");
+        menu.add(jMenuItem1);
+
+        jMenuItem2.setText("Eliminar");
+        jMenuItem2.setActionCommand("Eliminar");
+        menu.add(jMenuItem2);
+
+        jMenuItem3.setText("Hacer Archivo");
+        menu.add(jMenuItem3);
+
+        jMenuItem4.setText("Hacer Carpeta");
+        menu.add(jMenuItem4);
+
+        jMenuItem5.setText("Restablecer");
+        menu.add(jMenuItem5);
+
+        jMenuItem6.setText("Descargar");
+        menu.add(jMenuItem6);
+
+        javax.swing.GroupLayout tableLayout = new javax.swing.GroupLayout(table.getContentPane());
+        table.getContentPane().setLayout(tableLayout);
+        tableLayout.setHorizontalGroup(
+            tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        tableLayout.setVerticalGroup(
+            tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,7 +97,16 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jList1);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Home");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Carpetas");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Archivos");
+        treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTree1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTree1);
 
         jButton1.setText("Crear Archivo");
@@ -160,8 +207,6 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        
-        
         if (jList1.getSelectedIndex() >= 0) {
             
             if (jList1.getSelectedIndex() ==0) {
@@ -175,31 +220,102 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jList1MouseClicked
+
+    private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
+        if (evt.isMetaDown()) {
+            int row = jTree1.getClosestRowForLocation(
+                    evt.getX(), evt.getY());
+            jTree1.setSelectionRow(row);
+            Object v1
+                    = jTree1.getSelectionPath().
+                    getLastPathComponent();
+            nodo_seleccionado = (DefaultMutableTreeNode) v1;
+            
+            
+            if (jList1.getSelectedIndex() ==0) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                jMenuItem1.setVisible(true);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(true);
+                jMenuItem4.setVisible(true);
+                jMenuItem5.setVisible(false);
+                jMenuItem6.setVisible(true);
+            }
+            if (jList1.getSelectedIndex()==1) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                jMenuItem1.setVisible(false);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(false);
+                jMenuItem4.setVisible(false);
+                jMenuItem5.setVisible(false);
+                jMenuItem6.setVisible(true);
+            }
+            if (jList1.getSelectedIndex()==2) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                jMenuItem1.setVisible(false);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(false);
+                jMenuItem4.setVisible(false);
+                jMenuItem5.setVisible(true);
+                jMenuItem6.setVisible(true);
+            }
+            
+            
+            
+            if (nodo_seleccionado.getUserObject() instanceof Archivo) {
+//                persona_seleccionada
+//                        = (Persona) nodo_seleccionado.
+//                        getUserObject();
+//                menu_popup.show(evt.getComponent(),
+//                        evt.getX(), evt.getY());
+            }else{
+                
+//                pm_lista.show(evt.getComponent(),
+//                        evt.getX(), evt.getY());
+            }
+        }
+    }//GEN-LAST:event_jTree1MouseClicked
    private void CargarArbol(int x){
        DefaultTreeModel m = (DefaultTreeModel) jTree1.getModel();
        DefaultMutableTreeNode raiz
                 = (DefaultMutableTreeNode) m.getRoot();
         
-       DefaultMutableTreeNode nodo;
+       
+       DefaultMutableTreeNode carpetas = raiz.getNextNode();
+       DefaultMutableTreeNode archivos = raiz.getNextNode().getNextNode();
+       
        adminArchivo aa = new adminArchivo("./archivo.cbm");
        aa.cargarArchivo();
        adminCarpeta ac = new adminCarpeta("./carpeta.cbm");
        ac.cargarArchivo();
        
        if (x==1) {
+           
            for (Archivo a : aa.getListaArchivos()) {
-                nodo = new DefaultMutableTreeNode(
-                        new Archivo( a.getNombre(), a.getLink(), 
-                                a.getExtension(), a.getTamaño())
-                );
-                raiz.add(nodo);
+                if (a instanceof Archivo) {
+                   DefaultMutableTreeNode nodo;
+                    nodo = new DefaultMutableTreeNode(
+                            new Archivo( a.getNombre(), a.getLink(), 
+                                    a.getExtension(),a.getTamaño())
+                    );
+                    archivos.add(nodo);
+               }
             }
             for (Carpeta c : ac.getListaCarpetas()) {
-                nodo = new DefaultMutableTreeNode(
-                        new Carpeta(c.getNombre(),c.getLink())
-                );
-                raiz.add(nodo);
+                if (c instanceof Carpeta) {
+                    DefaultMutableTreeNode nodo;
+                    nodo = new DefaultMutableTreeNode(
+                            new Carpeta(c.getNombre(),c.getLink())
+                    );
+                    carpetas.add(nodo);
+                }
+                
             }
+            //raiz.add(carpetas);
+            //raiz.add(archivos);
             m.reload();
        }
        
@@ -278,15 +394,24 @@ public class Main extends javax.swing.JFrame {
     }
     ArrayList<Carpeta> carpeta= new ArrayList();
     ArrayList<Archivo> archivo= new ArrayList();
+    DefaultMutableTreeNode nodo_seleccionado;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JList<String> jList1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JProgressBar jProgressBar3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTree jTree1;
+    private javax.swing.JPopupMenu menu;
+    private javax.swing.JDialog table;
     // End of variables declaration//GEN-END:variables
 }
