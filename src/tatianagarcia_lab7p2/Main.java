@@ -4,11 +4,19 @@
  */
 package tatianagarcia_lab7p2;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 /**
  *
  * @author tatig
  */
 public class Main extends javax.swing.JFrame {
+    static Random r = new Random();
 
     /**
      * Creates new form Main
@@ -26,22 +34,214 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        jProgressBar2 = new javax.swing.JProgressBar();
+        jProgressBar3 = new javax.swing.JProgressBar();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Mi archivo", "Destacados", "Papelera" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Home");
+        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane2.setViewportView(jTree1);
+
+        jButton1.setText("Crear Archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Crear Carpeta");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                            .addComponent(jProgressBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2)
+                            .addComponent(jButton1))))
+                .addContainerGap(28, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(82, 82, 82)
+                        .addComponent(jButton1)
+                        .addGap(32, 32, 32)
+                        .addComponent(jButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String nom = JOptionPane.showInputDialog("Ingresar nombre del archivo");
+        String link = Link(1);
+        String ext = JOptionPane.showInputDialog("Ingresar extension del archivo");
+        double tam = Double.parseDouble(  JOptionPane.showInputDialog("Ingresar tamaño del archivo")  );
+        Archivo a = new Archivo(nom, link, ext, tam);
+        archivo.add(a);
+        adminArchivo aa = 
+                new adminArchivo("./archivo.cbm");
+        
+                aa.cargarArchivo();
+                aa.setArchivo(a);
+                aa.escribirArchivo();
+                JOptionPane.showMessageDialog(this, "Archvio agregado con exito");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String nom = JOptionPane.showInputDialog("Ingresar nombre de carpeta");
+        String link = Link(2);
+        Carpeta c = new Carpeta(nom, link);
+        carpeta.add(c);
+        adminCarpeta ac = 
+                new adminCarpeta("./carpeta.cbm");
+        
+                ac.cargarArchivo();
+                ac.setCarpeta(c);
+                ac.escribirArchivo();
+                JOptionPane.showMessageDialog(this, "Carpeta agregada con exito");
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        
+        
+        if (jList1.getSelectedIndex() >= 0) {
+            
+            if (jList1.getSelectedIndex() ==0) {
+                CargarArbol(1);
+            }
+            if (jList1.getSelectedIndex()==1) {
+                
+            }
+            if (jList1.getSelectedIndex()==2) {
+                
+            }
+        }
+    }//GEN-LAST:event_jList1MouseClicked
+   private void CargarArbol(int x){
+       DefaultTreeModel m = (DefaultTreeModel) jTree1.getModel();
+       DefaultMutableTreeNode raiz
+                = (DefaultMutableTreeNode) m.getRoot();
+        
+       DefaultMutableTreeNode nodo;
+       adminArchivo aa = new adminArchivo("./archivo.cbm");
+       aa.cargarArchivo();
+       adminCarpeta ac = new adminCarpeta("./carpeta.cbm");
+       ac.cargarArchivo();
+       
+       if (x==1) {
+           for (Archivo a : aa.getListaArchivos()) {
+                nodo = new DefaultMutableTreeNode(
+                        new Archivo( a.getNombre(), a.getLink(), 
+                                a.getExtension(), a.getTamaño())
+                );
+                raiz.add(nodo);
+            }
+            for (Carpeta c : ac.getListaCarpetas()) {
+                nodo = new DefaultMutableTreeNode(
+                        new Carpeta(c.getNombre(),c.getLink())
+                );
+                raiz.add(nodo);
+            }
+            m.reload();
+       }
+       
+   }
+    
+    
+    
+    private String Link(int x){
+        String s= "";
+        int limit=0;
+        if (x==1) {
+            limit = 10;
+        }
+        if (x==2) {
+            limit =5;
+        }
+        for (int i = 0; i < limit; i++) {
+            int num = r.nextInt(4);
+            while(num==0||num>3)
+            {
+                num = r.nextInt(4);
+            }
+            switch (num) {
+                case 1 -> {
+                    s += Integer.toString(  r.nextInt(9)  );
+                }
+                case 2 -> {
+                    int num1 = 65+r.nextInt(25);//90
+                    String s1 = (char)num1+"";
+                    System.out.println(num1+"->"+s1+"");
+                    s += s1;
+                }
+                case 3 -> {
+                    int num1 = 97+r.nextInt(25);//122
+                    String s1 = (char)num1+"";
+                    s += s1;
+                }
+            }
+        }
+        System.out.println(s);
+        return s;
+    }
     /**
      * @param args the command line arguments
      */
@@ -76,7 +276,17 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-
+    ArrayList<Carpeta> carpeta= new ArrayList();
+    ArrayList<Archivo> archivo= new ArrayList();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JProgressBar jProgressBar2;
+    private javax.swing.JProgressBar jProgressBar3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
