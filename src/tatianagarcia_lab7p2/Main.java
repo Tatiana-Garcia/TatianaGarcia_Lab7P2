@@ -17,12 +17,18 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class Main extends javax.swing.JFrame {
     static Random r = new Random();
+    Thread proceso2;
+    
 
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
+        
+        
+        
+        
     }
 
     /**
@@ -53,22 +59,51 @@ public class Main extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         jMenuItem1.setText("Destacar");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         menu.add(jMenuItem1);
 
         jMenuItem2.setText("Eliminar");
-        jMenuItem2.setActionCommand("Eliminar");
         menu.add(jMenuItem2);
 
         jMenuItem3.setText("Hacer Archivo");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         menu.add(jMenuItem3);
 
         jMenuItem4.setText("Hacer Carpeta");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         menu.add(jMenuItem4);
 
         jMenuItem5.setText("Restablecer");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         menu.add(jMenuItem5);
 
         jMenuItem6.setText("Descargar");
+        jMenuItem6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem6MouseClicked(evt);
+            }
+        });
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         menu.add(jMenuItem6);
 
         javax.swing.GroupLayout tableLayout = new javax.swing.GroupLayout(table.getContentPane());
@@ -108,6 +143,12 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(jTree1);
+
+        jProgressBar2.setBackground(new java.awt.Color(51, 255, 255));
+        jProgressBar2.setForeground(new java.awt.Color(0, 0, 204));
+        jProgressBar2.setMaximum(1);
+        jProgressBar2.setToolTipText("Descargando...");
+        jProgressBar2.setStringPainted(true);
 
         jButton1.setText("Crear Archivo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -177,7 +218,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String nom = JOptionPane.showInputDialog("Ingresar nombre del archivo");
-        String link = Link(1);
+        String link = "dive.google.com/"+Link(1);
         String ext = JOptionPane.showInputDialog("Ingresar extension del archivo");
         double tam = Double.parseDouble(  JOptionPane.showInputDialog("Ingresar tamaño del archivo")  );
         Archivo a = new Archivo(nom, link, ext, tam);
@@ -188,12 +229,12 @@ public class Main extends javax.swing.JFrame {
                 aa.cargarArchivo();
                 aa.setArchivo(a);
                 aa.escribirArchivo();
-                JOptionPane.showMessageDialog(this, "Archvio agregado con exito");
+                JOptionPane.showMessageDialog(this, "Archivo agregado con exito");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String nom = JOptionPane.showInputDialog("Ingresar nombre de carpeta");
-        String link = Link(2);
+        String link = "dive.google.com/"+nom+"/"+Link(2);
         Carpeta c = new Carpeta(nom, link);
         carpeta.add(c);
         adminCarpeta ac = 
@@ -210,6 +251,7 @@ public class Main extends javax.swing.JFrame {
         if (jList1.getSelectedIndex() >= 0) {
             
             if (jList1.getSelectedIndex() ==0) {
+                Clean();
                 CargarArbol(1);
             }
             if (jList1.getSelectedIndex()==1) {
@@ -231,54 +273,108 @@ public class Main extends javax.swing.JFrame {
                     getLastPathComponent();
             nodo_seleccionado = (DefaultMutableTreeNode) v1;
             
-            
-            if (jList1.getSelectedIndex() ==0) {
-                menu.show(evt.getComponent(),
-                        evt.getX(), evt.getY());
-                jMenuItem1.setVisible(true);
-                jMenuItem2.setVisible(true);
-                jMenuItem3.setVisible(true);
-                jMenuItem4.setVisible(true);
-                jMenuItem5.setVisible(false);
-                jMenuItem6.setVisible(true);
-            }
-            if (jList1.getSelectedIndex()==1) {
-                menu.show(evt.getComponent(),
-                        evt.getX(), evt.getY());
-                jMenuItem1.setVisible(false);
-                jMenuItem2.setVisible(true);
-                jMenuItem3.setVisible(false);
-                jMenuItem4.setVisible(false);
-                jMenuItem5.setVisible(false);
-                jMenuItem6.setVisible(true);
-            }
-            if (jList1.getSelectedIndex()==2) {
-                menu.show(evt.getComponent(),
-                        evt.getX(), evt.getY());
-                jMenuItem1.setVisible(false);
-                jMenuItem2.setVisible(true);
-                jMenuItem3.setVisible(false);
-                jMenuItem4.setVisible(false);
-                jMenuItem5.setVisible(true);
-                jMenuItem6.setVisible(true);
-            }
-            
-            
-            
             if (nodo_seleccionado.getUserObject() instanceof Archivo) {
-//                persona_seleccionada
-//                        = (Persona) nodo_seleccionado.
-//                        getUserObject();
-//                menu_popup.show(evt.getComponent(),
-//                        evt.getX(), evt.getY());
+                validacionJList(evt);
+                a = (Archivo)nodo_seleccionado.getUserObject();
+                jProgressBar2.setString(a.getLink());
+            }if (nodo_seleccionado.getUserObject() instanceof Carpeta) {
+                validacionJList(evt);
+                c = (Carpeta)nodo_seleccionado.getUserObject();
+                jProgressBar2.setString(c.getLink());
             }else{
-                
-//                pm_lista.show(evt.getComponent(),
-//                        evt.getX(), evt.getY());
+                if (!nodo_seleccionado.isRoot()) {
+                    validacionJList(evt);
+                }
             }
         }
     }//GEN-LAST:event_jTree1MouseClicked
-   private void CargarArbol(int x){
+
+    private void jMenuItem6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MouseClicked
+        
+    }//GEN-LAST:event_jMenuItem6MouseClicked
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        if (nodo_seleccionado.getUserObject() instanceof Archivo) {
+            //jProgressBar2.setValue(jProgressBar2.getValue()*0);
+            a = (Archivo)nodo_seleccionado.getUserObject();
+            ab=new admBarra(jProgressBar2, a.getTamaño());
+            ab.start();
+            jProgressBar2.setValue(jProgressBar2.getValue()*0);
+            
+        }
+        if (nodo_seleccionado.getUserObject() instanceof Carpeta) {
+            c = (Carpeta)nodo_seleccionado.getUserObject();
+            jProgressBar2.setValue(0);
+            //System.out.println("world");
+            for (Archivo ar :((Carpeta)nodo_seleccionado.getUserObject()).getArchivos()) {
+                //System.out.println("hello");
+                jProgressBar2.setMaximum(c.getArchivos().size());
+                ab=new admBarra(jProgressBar2, ar.getTamaño());
+                ab.start();
+            }
+                
+            
+            jProgressBar2.setValue(0);
+            
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        String nom = JOptionPane.showInputDialog("Ingresar nombre del archivo");
+        String link = "dive.google.com/"+Link(1);
+        String ext = JOptionPane.showInputDialog("Ingresar extension del archivo");
+        double tam = Double.parseDouble(  JOptionPane.showInputDialog("Ingresar tamaño del archivo")  );
+        Archivo a = new Archivo(nom, link, ext, tam);
+        
+        adminCarpeta ac = 
+                new adminCarpeta("./carpeta.cbm");
+        
+        ac.cargarArchivo();
+        for (Carpeta c : ac.getListaCarpetas()) {
+            c.getArchivos().add(a);
+        }
+        ac.escribirArchivo();
+        Clean();
+        JOptionPane.showMessageDialog(this, "Archivo agregado con exito");
+        CargarArbol(1);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        String nom = JOptionPane.showInputDialog("Ingresar nombre de carpeta");
+        String link = "dive.google.com/"+nom+"/"+Link(2);
+        Carpeta c = new Carpeta(nom, link);
+        carpeta.add(c);
+        adminCarpeta ac = 
+                new adminCarpeta("./carpeta.cbm");
+        
+                ac.cargarArchivo();
+                ac.setCarpeta(c);
+                ac.escribirArchivo();
+                JOptionPane.showMessageDialog(this, "Carpeta agregada con exito");
+        
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    
+    private void Clean(){
+        DefaultTreeModel m = (DefaultTreeModel) jTree1.getModel();
+       DefaultMutableTreeNode raiz
+                = (DefaultMutableTreeNode) m.getRoot();
+       
+       DefaultMutableTreeNode carpetas = raiz.getNextNode();
+       DefaultMutableTreeNode archivos = raiz.getNextNode().getNextNode();
+       carpetas.removeAllChildren();
+       archivos.removeAllChildren();
+       m.reload();
+    }
+    
+    private void CargarArbol(int x){
        DefaultTreeModel m = (DefaultTreeModel) jTree1.getModel();
        DefaultMutableTreeNode raiz
                 = (DefaultMutableTreeNode) m.getRoot();
@@ -310,7 +406,17 @@ public class Main extends javax.swing.JFrame {
                     nodo = new DefaultMutableTreeNode(
                             new Carpeta(c.getNombre(),c.getLink())
                     );
+                    if (!c.getArchivos().isEmpty()) {
+                        for (Archivo a : c.getArchivos()) {
+                            DefaultMutableTreeNode nodo2=new DefaultMutableTreeNode(
+                                    new Archivo(a.getNombre(),a.getLink(),a.getExtension(),a.getTamaño())
+                            );
+                            nodo.add(nodo2);
+                        }
+                        
+                    }
                     carpetas.add(nodo);
+//                    
                 }
                 
             }
@@ -321,7 +427,39 @@ public class Main extends javax.swing.JFrame {
        
    }
     
-    
+    private void validacionJList(java.awt.event.MouseEvent evt){
+        if (jList1.getSelectedIndex() ==0) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                
+                jMenuItem1.setVisible(true);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(true);
+                jMenuItem4.setVisible(true);
+                jMenuItem5.setVisible(false);
+                jMenuItem6.setVisible(true);
+            }
+            if (jList1.getSelectedIndex()==1) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                jMenuItem1.setVisible(false);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(false);
+                jMenuItem4.setVisible(false);
+                jMenuItem5.setVisible(false);
+                jMenuItem6.setVisible(true);
+            }
+            if (jList1.getSelectedIndex()==2) {
+                menu.show(evt.getComponent(),
+                        evt.getX(), evt.getY());
+                jMenuItem1.setVisible(false);
+                jMenuItem2.setVisible(true);
+                jMenuItem3.setVisible(false);
+                jMenuItem4.setVisible(false);
+                jMenuItem5.setVisible(true);
+                jMenuItem6.setVisible(true);
+            }
+    }
     
     private String Link(int x){
         String s= "";
@@ -355,7 +493,7 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         }
-        System.out.println(s);
+        //System.out.println(s);
         return s;
     }
     /**
@@ -395,6 +533,10 @@ public class Main extends javax.swing.JFrame {
     ArrayList<Carpeta> carpeta= new ArrayList();
     ArrayList<Archivo> archivo= new ArrayList();
     DefaultMutableTreeNode nodo_seleccionado;
+    Archivo a;
+    Carpeta c; 
+    admBarra ab;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
